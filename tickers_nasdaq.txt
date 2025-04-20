@@ -1,1 +1,4 @@
-# Dummy content for tickers_nasdaq.txt
+APCX
+SINT
+CYN
+HOTH
