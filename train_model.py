@@ -74,11 +74,12 @@ if __name__ == '__main__':
     all_X, all_y = [], []
     for t in tickers:
         df = load_hist(t)
-    if df is None or len(df) < 60:
-        continue
+        if df is None or len(df) < 60:
+            continue
         X = make_features(df)
         y = label_future(df).reindex(X.index).fillna(0).astype(int)
-        all_X.append(X); all_y.append(y)
+        all_X.append(X)
+        all_y.append(y)
     if all_X:
         X_full = pd.concat(all_X)
         y_full = pd.concat(all_y)
