@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: goat-stock-alert
+    name: goat-train-model
     env: python3
     plan: starter
     buildCommand: pip install -r requirements.txt
