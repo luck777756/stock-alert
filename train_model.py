@@ -8,6 +8,7 @@ from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from ta.volatility import BollingerBands
 
 print("✅ 학습 시작합니다...")
+
 def load_hist(ticker):
     try:
         time.sleep(1)
