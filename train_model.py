@@ -7,8 +7,6 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from ta.volatility import BollingerBands
 
-print("✅ 학습 시작합니다...")
-
 def load_hist(ticker):
     try:
         time.sleep(1)
@@ -97,4 +95,6 @@ if __name__ == '__main__':
         )
         clf.fit(X_full, y_full)
         joblib.dump(clf.best_estimator_, "best_model.pkl")
-        print("✅ 모델 학습 완료 및 저장됨.")
+        import shutil
+        shutil.make_archive("trained_model", 'zip', '.', 'best_model.pkl')
+        print("📦 모델 압축 완료: trained_model.zip 생성됨") 
