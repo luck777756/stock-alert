@@ -1,0 +1,10 @@
+ta
+yfinance
+pandas
+requests
+fastapi
+uvicorn
+vaderSentiment
+xgboost
+joblib
+scikit-learn
