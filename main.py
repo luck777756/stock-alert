@@ -1,6 +1,5 @@
 import os, time, logging
 import datetime, requests, joblib, pandas as pd, yfinance as yf
-from keep_alive import keep_alive
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from ta.volatility import BollingerBands
 
@@ -10,7 +9,6 @@ SCAN_INTERVAL, SEND_INTERVAL, URGENT_INTERVAL = 60, 3600, 1200
 STRICT_CAP, PRICE_LIMIT = (300_000_000,1_500_000_000), 10
 TICKERS_FILE = 'tickers_nasdaq.txt'; DELISTED={'TMBR'}
 
-keep_alive()
 
 # Load ML model if available
 try:
