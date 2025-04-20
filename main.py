@@ -10,7 +10,9 @@ SCAN_INTERVAL, SEND_INTERVAL, URGENT_INTERVAL = 60, 3600, 1200
 STRICT_CAP, PRICE_LIMIT = (300_000_000,1_500_000_000), 10
 TICKERS_FILE = 'tickers_nasdaq.txt'; DELISTED={'TMBR'}
 
-
+def should_send_watchlist():
+    now = datetime.datetime.now().time()
+    return datetime.time(9, 0) <= now <= datetime.time(9, 10)
 
 # Load ML model if available
 try:
