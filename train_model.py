@@ -73,7 +73,7 @@ if __name__ == '__main__':
     tickers = [t.strip() for t in open("tickers_nasdaq.txt")]
     all_X, all_y = [], []
     for t in tickers:
-    df = load_hist(t)
+        df = load_hist(t)
     if df is None or len(df) < 60:
         continue
         X = make_features(df)
