@@ -7,12 +7,17 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from ta.volatility import BollingerBands
 
+print("✅ 학습 시작합니다...")
 def load_hist(ticker):
-    time.sleep(1)
-    df = yf.download(ticker, period="1y", interval="1d", auto_adjust=True)
-    df.dropna(inplace=True)
-    return df
-
+    try:
+        time.sleep(1)
+        df = yf.download(ticker, period="1y", interval="1d", auto_adjust=True)
+        df.dropna(inplace=True)
+        return df
+    except Exception as e:
+        print(f"❌ {ticker} 불러오기 실패: {e}")
+        return None
+        
 def make_features(df):
     X = pd.DataFrame(index=df.index)
     X['obv'] = ((df['Close'].diff()>0)*df['Volume'] - (df['Close'].diff()<0)*df['Volume']).cumsum()
@@ -68,8 +73,9 @@ if __name__ == '__main__':
     tickers = [t.strip() for t in open("tickers_nasdaq.txt")]
     all_X, all_y = [], []
     for t in tickers:
-        df = load_hist(t)
-        if len(df)<60: continue
+    df = load_hist(t)
+    if df is None or len(df) < 60:
+        continue
         X = make_features(df)
         y = label_future(df).reindex(X.index).fillna(0).astype(int)
         all_X.append(X); all_y.append(y)
