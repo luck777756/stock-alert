@@ -10,10 +10,6 @@ SCAN_INTERVAL, SEND_INTERVAL, URGENT_INTERVAL = 60, 3600, 1200
 STRICT_CAP, PRICE_LIMIT = (300_000_000,1_500_000_000), 10
 TICKERS_FILE = 'tickers_nasdaq.txt'; DELISTED={'TMBR'}
 
-def should_send_watchlist():
-    now = datetime.datetime.now().time()
-    return datetime.time(9, 0) <= now <= datetime.time(9, 10)
-
 # Load ML model if available
 try:
     model = joblib.load('best_model.pkl')
@@ -130,10 +126,11 @@ def main_loop():
             msg = format_alert(prefix, t, info, grade, i, entry, target, session, basis)
             send_msg(msg,'fallback', urgent=False)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     sent_watch = False
     logging.info("✅ 시스템 v50 시작")
-    send_msg("✅ 시스템 v50 시작","startup", urgent=False)
+    send_msg("✅ 시스템 v50 시작", "startup", urgent=True)
+
     while True:
         now = datetime.datetime.now()
         if should_send_watchlist() and not sent_watch:
@@ -160,9 +157,5 @@ def daily_watchlist():
             send_msg(msg,'daily_watch', urgent=False)
 
 def should_send_watchlist():
-    now = datetime.datetime.now()
-    if now.weekday() >= 5:  # Saturday, Sunday
-        return True
-    if now.hour >= 17:  # Assume 5PM local time is after US market close
-        return True
-    return False
+    now = datetime.datetime.now().time()
+    return datetime.time(6, 0) <= now <= datetime.time(8, 0)
