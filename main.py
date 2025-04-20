@@ -86,7 +86,7 @@ def calculate_score(df):
     diffs = c.diff().fillna(0)
     obv = (diffs.gt(0) * v - diffs.lt(0) * v).cumsum()
     return (
-        (obv.iat[-1] - obv.iat[-5]) * 0.5
+        (obv.iloc[-1, 0] - obv.iloc[-5, 0]) * 0.5
         + ((v.iat[-1] - v.iat[-2]) / v.iat[-2] if v.iat[-2] > 0 else 0) * 0.3
         + ((c.iat[-1] - c.rolling(20).mean().iat[-1]) / c.rolling(20).mean().iat[-1]) * 0.2
     )
