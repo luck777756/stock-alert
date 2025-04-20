@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
         mask = ~y_full.isna()
         X_full = X_full[mask]
-        y_full = y_full[mask].astype(int)
+        y_full = y_full[mask].fillna(0).astype(int)
 
         tscv = TimeSeriesSplit(n_splits=5)
         params = {'n_estimators':[50,100], 'max_depth':[3,5], 'learning_rate':[0.01,0.1]}
