@@ -1,10 +1,1 @@
-services:
-  - type: worker
-    name: goat-stock-alert
-    env: python
-    plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: bash start.sh
-    region: oregon
-    branch: main
-    autoDeploy: true
+# Dummy content for render.yaml

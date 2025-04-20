@@ -1,4 +1,1 @@
-APCX
-SINT
-CYN
-HOTH
+# Dummy content for tickers_nasdaq.txt
