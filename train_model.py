@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import joblib
+import time
 from xgboost import XGBClassifier
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from ta.volatility import BollingerBands
 
 def load_hist(ticker):
+    time.sleep(1)
     df = yf.download(ticker, period="1y", interval="1d", auto_adjust=True)
     df.dropna(inplace=True)
     return df
