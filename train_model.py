@@ -72,11 +72,19 @@ if __name__ == '__main__':
         y = label_future(df).reindex(X.index).fillna(0).astype(int)
         all_X.append(X); all_y.append(y)
     if all_X:
-        X_full = pd.concat(all_X); y_full = pd.concat(all_y)
+        X_full = pd.concat(all_X)
+        y_full = pd.concat(all_y)
+
+        mask = ~y_full.isna()
+        X_full = X_full[mask]
+        y_full = y_full[mask].astype(int)
+
         tscv = TimeSeriesSplit(n_splits=5)
         params = {'n_estimators':[50,100], 'max_depth':[3,5], 'learning_rate':[0.01,0.1]}
-        clf = GridSearchCV(XGBClassifier(use_label_encoder=False, eval_metric='logloss'),
-                           params, cv=tscv, scoring='precision')
+        clf = GridSearchCV(
+            XGBClassifier(use_label_encoder=False, eval_metric='logloss'),
+            params, cv=tscv, scoring='precision'
+        )
         clf.fit(X_full, y_full)
         joblib.dump(clf.best_estimator_, "best_model.pkl")
-        print("Model trained and saved.")
+        print("✅ 모델 학습 완료 및 저장됨.")
