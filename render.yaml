@@ -1,10 +1,10 @@
 services:
   - type: web
     name: goat-stock-alert
-    env: python
-    plan: free
+    env: python3
+    plan: starter
     buildCommand: pip install -r requirements.txt
-    startCommand: bash start.sh
+    startCommand: python3 train_model.py
     region: oregon
     branch: main
     autoDeploy: true
