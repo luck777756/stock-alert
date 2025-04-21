@@ -29,7 +29,10 @@ jobs:
           pip install pytest
           pytest --maxfail=1 --disable-warnings -q
 
-      - name: Lint with flake8
-        run: |
-          pip install flake8
-          flake8 . --max-line-length 88
+            - name: Lint with flake8
+-       run: |
+-         pip install flake8
+-         flake8 . --max-line-length 88
++       run: |
++         pip install flake8
++         flake8 .  # will pick up settings in .flake8
