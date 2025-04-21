@@ -1,15 +1,3 @@
-# GOAT Stock Alert
-
-매집 돌파 감지 및 알림 시스템
-
-## 설치
-```bash
-git clone https://github.com/luck777756/stock-alert.git
-cd stock-alert
-python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
 구성
 main.py: 워커 서비스 진입점
 
@@ -29,6 +17,13 @@ bash
 복사
 편집
 python3 main.py
+모델 학습
+bash
+복사
+편집
+bash train.sh
+환경 변수
+NTFY_CHANNEL: ntfy 알림 채널 URL (기본: https://ntfy.sh/my-stock-alert)
 모델 학습
 bash
 복사
