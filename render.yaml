@@ -1,10 +1,10 @@
 services:
   - type: worker
-    name: goat-train-model
+    name: goat-stock-alert
     env: python
     plan: starter
     buildCommand: pip install -r requirements.txt
-    startCommand: python3 train_model.py && sleep infinity
+    startCommand: bash start.sh
     region: oregon
     branch: main
     autoDeploy: true
