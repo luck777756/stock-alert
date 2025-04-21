@@ -17,7 +17,6 @@ STRICT_CAP, PRICE_LIMIT = (300_000_000, 1_500_000_000), 10
 TICKERS_FILE = 'tickers_nasdaq.txt'
 DELISTED = {'TMBR'}
 
-# Load ML model if available
 try:
     model = joblib.load('best_model.pkl')
     logging.info('ML model loaded.')
@@ -86,11 +85,9 @@ def daily_watchlist():
         grade = '1' if score > 50 else '1.5' if score > 20 else '2' if score > 5 else '3'
         results.append((t, info, grade, score, df))
     top = sorted(results, key=lambda x: x[3], reverse=True)[:5]
-    prefix = "💤 예비 종목 알림:"
     for i, (t, info, grade, score, df) in enumerate(top, 1):
         entry, target, session = determine_strategy(df)
-        basis = "OBV↑, Bollinger%, MA20 diff"
-        msg = format_alert(prefix, t, info, grade, i, entry, target, session, basis)
+        msg = format_alert("💤 예비 종목 알림:", t, info, grade, i, entry, target, session, "OBV↑, Bollinger%, MA20 diff")
         send_msg(msg, 'daily_watch', urgent=False)
 
 def should_send_watchlist():
@@ -105,7 +102,6 @@ def main_loop():
         logging.error(f"{TICKERS_FILE} 파일을 찾을 수 없습니다.")
         return
 
-    # Strict stage
     results = []
     for t in tickers:
         if t in DELISTED:
@@ -122,16 +118,12 @@ def main_loop():
 
     strict = sorted([r for r in results if r[2] in ['1', '1.5']], key=lambda x: x[3], reverse=True)[:5]
     if strict:
-        prefix = "✅ Strict 상위 5개:"
         for i, (t, info, grade, score, df) in enumerate(strict, 1):
             entry, target, session = determine_strategy(df)
-            basis = "OBV↑, Bollinger%, MA20 diff"
-            msg = format_alert(prefix, t, info, grade, i, entry, target, session, basis)
+            msg = format_alert("✅ Strict 상위 5개:", t, info, grade, i, entry, target, session, "OBV↑, Bollinger%, MA20 diff")
             send_msg(msg, 'strict', urgent=True)
         return
 
-    logging.info("Strict candidates: 0, moving to Fallback stage")
-    # Fallback stage
     results = []
     for t in tickers:
         df, info = fetch_data(t)
@@ -141,18 +133,16 @@ def main_loop():
         score = calculate_score(df)
         grade = '1' if score > 50 else '1.5' if score > 20 else '2' if score > 5 else '3'
         results.append((t, info, grade, score, df))
+
     fallback = sorted(results, key=lambda x: x[3], reverse=True)[:5]
-    prefix = "⚡ Fallback 상위 5개:"
     for i, (t, info, grade, score, df) in enumerate(fallback, 1):
         entry, target, session = determine_strategy(df)
-        basis = "OBV↑, Bollinger%, MA20 diff"
-        msg = format_alert(prefix, t, info, grade, i, entry, target, session, basis)
+        msg = format_alert("⚡ Fallback 상위 5개:", t, info, grade, i, entry, target, session, "OBV↑, Bollinger%, MA20 diff")
         send_msg(msg, 'fallback', urgent=False)
 
 if __name__ == '__main__':
     logging.info("✅ 시스템 v50 시작")
     send_msg("✅ 시스템 v50 시작", "startup", urgent=True)
-
     while True:
         try:
             if should_send_watchlist():
