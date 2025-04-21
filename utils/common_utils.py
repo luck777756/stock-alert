@@ -1,8 +1,3 @@
-
----
-
-### `utils/common_utils.py`
-```python
 import pandas as pd
 import numpy as np
 from ta.volatility import BollingerBands
