@@ -116,7 +116,7 @@ def main_loop():
         time.sleep(1)    # ← strict 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
-        # marketCap & PRICE_LIMIT 필터
+        # marketCap & PRICE_LIMIT 스칼라 비교
         mc = info.get('marketCap', 0)
         price = df['Close'].iloc[-1]
         if mc < STRICT_CAP[0] or mc > STRICT_CAP[1] or price > PRICE_LIMIT:
