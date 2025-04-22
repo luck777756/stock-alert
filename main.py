@@ -41,14 +41,19 @@ def send_msg(text, stage, urgent=False):
         logging.error(f"send_msg error: {e}")
 
 def fetch_data(ticker):
-    try:
-        df = yf.download(ticker, period='1mo', interval='1d', auto_adjust=True)
-        df.dropna(inplace=True)
-        info = yf.Ticker(ticker).info
-        return df, info
-    except Exception as e:
-        logging.error(f"fetch_data error for {ticker}: {e}")
-        return None, None
+retries = 3
+base_delay = 1  # 초
+for attempt in range(1, retries+1):
+        try:
+           df = yf.download(ticker, period='1mo', interval='1d', auto_adjust=True)
+           df.dropna(inplace=True)
+           info = yf.Ticker(ticker).info
+           return df, info
+       except Exception as e:
+           logging.warning(f"{ticker}: fetch_data 시도 {attempt}/{retries} 실패 → {e}")
+           time.sleep(base_delay * (2 ** (attempt-1)))
+   logging.error(f"{ticker}: fetch_data 최종 실패 (after {retries} retries)")
+   return None, None
 
 def determine_strategy(df):
     entry = round(df['Close'].iat[-1], 2)
@@ -78,6 +83,7 @@ def daily_watchlist():
     results = []
     for t in tickers:
         df, info = fetch_data(t)
+        time.sleep(1)    # ← 요청 과부하 방지용 짧은 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
         X = make_features(df)
@@ -107,6 +113,7 @@ def main_loop():
         if t in DELISTED:
             continue
         df, info = fetch_data(t)
+         time.sleep(1)    # ← strict 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
         if not (STRICT_CAP[0] <= info['marketCap'] <= STRICT_CAP[1]) or df['Close'].iat[-1] > PRICE_LIMIT:
@@ -127,6 +134,7 @@ def main_loop():
     results = []
     for t in tickers:
         df, info = fetch_data(t)
+         time.sleep(1)    # ← fallback 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
         X = make_features(df)
