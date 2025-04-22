@@ -113,7 +113,7 @@ def main_loop():
         if t in DELISTED:
             continue
         df, info = fetch_data(t)
-         time.sleep(1)    # ← strict 탐색 전 대기
+        time.sleep(1)    # ← strict 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
         if not (STRICT_CAP[0] <= info['marketCap'] <= STRICT_CAP[1]) or df['Close'].iat[-1] > PRICE_LIMIT:
@@ -134,7 +134,7 @@ def main_loop():
     results = []
     for t in tickers:
         df, info = fetch_data(t)
-         time.sleep(1)    # ← fallback 탐색 전 대기
+        time.sleep(1)    # ← fallback 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
         X = make_features(df)
