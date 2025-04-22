@@ -58,7 +58,7 @@ def fetch_data(ticker):
 def determine_strategy(df):
     entry = round(df['Close'].iat[-1], 2)
     target = round(entry * 1.5, 2)
-    session = '프장 진입' if df['High'].iat[-1] - df['Low'].iat[-1] > 0.5 else '본장 진입'
+    session = '프장 진입' if df['High'].iloc[-1] - df['Low'].iloc[-1] > 0.5 else '본장 진입'
     return entry, target, session
 
 def format_alert(prefix, ticker, info, grade, rank, entry, target, session, basis):
@@ -116,7 +116,7 @@ def main_loop():
         time.sleep(1)    # ← strict 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
             continue
-        if not (STRICT_CAP[0] <= info['marketCap'] <= STRICT_CAP[1]) or df['Close'].iat[-1] > PRICE_LIMIT:
+        if not (STRICT_CAP[0] <= info['marketCap'] <= STRICT_CAP[1]) or df['Close'].iloc[-1] > PRICE_LIMIT:
             continue
         X = make_features(df)
         score = calculate_score(df)
