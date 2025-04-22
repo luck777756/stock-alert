@@ -115,13 +115,13 @@ def main_loop():
         df, info = fetch_data(t)
         time.sleep(1)    # ← strict 탐색 전 대기
         if df is None or info is None or df.empty or len(df) < 21 or 'marketCap' not in info:
-            continue     
-        # marketCap & PRICE_LIMIT 필터     
+            continue
+        # marketCap & PRICE_LIMIT 필터
         mc = info.get('marketCap', 0)
         price = df['Close'].iloc[-1]
         if mc < STRICT_CAP[0] or mc > STRICT_CAP[1] or price > PRICE_LIMIT:
             continue
-        # 필터 통과했으니 점수 계산   
+        # 필터 통과했으니 점수 계산
         X = make_features(df)
         score = calculate_score(df)
         grade = '1' if score > 50 else '1.5' if score > 20 else '2' if score > 5 else '3'
