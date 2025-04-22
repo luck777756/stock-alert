@@ -41,19 +41,19 @@ def send_msg(text, stage, urgent=False):
         logging.error(f"send_msg error: {e}")
 
 def fetch_data(ticker):
-retries = 3
-base_delay = 1  # 초
-for attempt in range(1, retries+1):
+    retries = 3
+    base_delay = 1  # 초
+    for attempt in range(1, retries+1):
         try:
            df = yf.download(ticker, period='1mo', interval='1d', auto_adjust=True)
            df.dropna(inplace=True)
            info = yf.Ticker(ticker).info
            return df, info
-       except Exception as e:
-           logging.warning(f"{ticker}: fetch_data 시도 {attempt}/{retries} 실패 → {e}")
-           time.sleep(base_delay * (2 ** (attempt-1)))
-   logging.error(f"{ticker}: fetch_data 최종 실패 (after {retries} retries)")
-   return None, None
+        except Exception as e:
+            logging.warning(f"{ticker}: fetch_data 시도 {attempt}/{retries} 실패 → {e}")
+            time.sleep(base_delay * (2 ** (attempt-1)))
+    logging.error(f"{ticker}: fetch_data 최종 실패 (after {retries} retries)")
+    return None, None
 
 def determine_strategy(df):
     entry = round(df['Close'].iat[-1], 2)
